@@ -1,12 +1,18 @@
 name: Update
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "_data/*.yml"
+      - ".github/workflows/update.yml"
   workflow_dispatch:
   schedule:
     - cron: '* */1 * * *' # 1시간 마다
 
 jobs:
-  check-new-version:
+  CSS:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout metadata
@@ -18,7 +24,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Sync S3 Bucket
-        run: aws s3 sync ./s3 ${{ secrets.AWS_S3_BUCKET }}
+        run: aws s3 sync ${{ secrets.AWS_S3_BUCKET }} ./s3
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
         with:
