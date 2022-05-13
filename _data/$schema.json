@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$comment": "JSON Scehma for dun.land data",
+  "type": "object",
+
+  "definitions": {
+    "license": {
+      "type": "string",
+      "default": "LICENSE",
+      "$comment": "라이선스 파일 경로"
+    },
+    "files": {
+      "type": "array",
+      "default": ["*"],
+      "$comment": "가져올 파일 목록"
+    },
+    "minified": {
+      "type": "boolean",
+      "default": false,
+      "$comment": ".min 파일을 생성할지 여부"
+    }
+  },
+  "patternProperties": {
+    "[a-z\\d_-]*$": {
+      "type": "object",
+
+      "properties": {
+        "npm": {
+          "type": "string"
+        },
+        "license": { "$ref": "#/definitions/license" },
+        "files": { "$ref": "#/definitions/files" },
+        "minified": { "$ref": "#/definitions/minified" }
+      }
+    }
+  }
+}

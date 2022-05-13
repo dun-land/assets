@@ -1,0 +1,5 @@
+.idea/
+node_modules/
+
+# S3 bucket sync
+s3

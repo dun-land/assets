@@ -1,0 +1,7 @@
+sanitize:
+  npm: sanitize.css
+  license: LICENSE.md
+  minified: true
+  files:
+    - '*.css'
+

@@ -1,0 +1,36 @@
+name: Update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '* */1 * * *' # 1시간 마다
+
+jobs:
+  check-new-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout metadata
+        uses: actions/checkout@v3
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Sync S3 Bucket
+        run: aws s3 sync ./s3 ${{ secrets.AWS_S3_BUCKET }}
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.9
+      - name: Setup Node v16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Update CSS
+        run: "pnpm update:css"
+      - name: Upload S3
+        run: aws s3 cp ./s3 ${{ secrets.AWS_S3_BUCKET }} --recursive
