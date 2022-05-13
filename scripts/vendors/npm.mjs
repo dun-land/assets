@@ -1,13 +1,12 @@
-import { basename } from 'path'
-import { writeFile, mkdir } from 'fs/promises'
+import { basename, resolve } from 'path'
+import { mkdir, writeFile } from 'fs/promises'
 import { execSync } from 'child_process'
 
 import { x } from 'tar'
 import compare from 'semver/functions/compare.js'
 
-import { download, s3Dir } from '../utils.mjs'
+import { download } from '../utils.mjs'
 import glob from 'minimatch'
-import { resolve } from 'path'
 import { tmpdir } from 'os'
 
 export default async (content, currentVersion, projectDir) => {
@@ -65,8 +64,8 @@ export default async (content, currentVersion, projectDir) => {
 }
 
 const version = (packageName) => {
-  const json = execSync(`npm info ${packageName} --json`).toString()
+  const json = execSync(`npm info ${packageName}@latest --json`).toString()
   const obj = JSON.parse(json)
 
-  return `v${obj['dist-tags'].latest}`
+  return `v${obj.version}`
 }
