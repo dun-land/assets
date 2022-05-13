@@ -5,3 +5,9 @@ sanitize:
   files:
     - '*.css'
 
+normalize:
+  npm: normalize.css
+  license: LICENSE.md
+  minified: true
+  files:
+    - '*.css'
