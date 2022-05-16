@@ -5,7 +5,7 @@ import { execSync } from 'child_process'
 import { x } from 'tar'
 import compare from 'semver/functions/compare.js'
 
-import { download } from '../utils.mjs'
+import { download, tarExtract } from '../utils.mjs'
 import glob from 'minimatch'
 import { tmpdir } from 'os'
 
@@ -24,41 +24,14 @@ export default async (content, currentVersion, projectDir) => {
   const removePrefixVersion = lastVersion.replace(/^v/, '')
   const url = `https://registry.npmjs.org/${content.npm}/-/${content.npm}-${removePrefixVersion}.tgz`
 
-  // 저장 디렉토리 생성
+  // 파일 다운로드
+  const downloadPath = await download(url)
+
   const savePath = resolve(projectDir, lastVersion)
   await mkdir(savePath, { recursive: true })
 
-  const downloadPath = await download(url)
-
-  await x({
-    cwd: tmpdir(),
-    file: downloadPath,
-    newer: true,
-    filter: (path) => {
-      // 라이선스 가져옴
-      if (basename(path)  === (content.license ?? 'LICENSE')) {
-        return true
-      }
-
-      // 패턴 매칭
-      for (const pattern of content.files) {
-        if (!glob(path, pattern, { matchBase: true })) {
-          return false
-        }
-      }
-
-      return true
-    },
-    onentry: async (entry) => {
-      let filename = basename(entry.path)
-
-      if (filename === content.license) {
-        filename = 'LICENSE'
-      }
-
-      await writeFile(resolve(savePath, filename), entry)
-    }
-  })
+  // 저장 디렉토리 생성
+  await tarExtract(content, downloadPath, savePath)
 
   return Promise.resolve(savePath)
 }
