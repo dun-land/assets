@@ -24,7 +24,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Sync S3 Bucket
-        run: aws s3 sync ${{ secrets.AWS_S3_BUCKET }} ./s3
+        run: aws s3 sync ${{ secrets.AWS_S3_BUCKET }}/css ./s3/css
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
         with:
@@ -39,4 +39,4 @@ jobs:
       - name: Update CSS
         run: "pnpm update:css"
       - name: Upload S3
-        run: aws s3 cp ./s3 ${{ secrets.AWS_S3_BUCKET }} --recursive
+        run: aws s3 cp ./s3/css ${{ secrets.AWS_S3_BUCKET }}/css --recursive
