@@ -8,7 +8,7 @@ import { tmpdir } from 'os'
 
 export const rootDir = join(import.meta.url.replace(/^file:[\/\\]+/, ''), '..', '..')
 export const dataDir = join(rootDir, '_data')
-export const s3Dir = join(rootDir, 's3')
+export const buckets = join(rootDir, 'buckets')
 
 /**
  * @param {string} filename

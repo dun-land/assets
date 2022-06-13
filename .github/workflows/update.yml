@@ -17,14 +17,6 @@ jobs:
     steps:
       - name: Checkout metadata
         uses: actions/checkout@v3
-      - name: Configure AWS
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-region: ${{ secrets.AWS_REGION }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Sync S3 Bucket
-        run: aws s3 sync ${{ secrets.AWS_S3_BUCKET }}/css ./s3/css
       - name: Setup PNPM
         uses: pnpm/action-setup@v2
         with:
@@ -38,5 +30,9 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Update CSS
         run: "pnpm update:css"
-      - name: Upload S3
-        run: aws s3 cp ./s3/css ${{ secrets.AWS_S3_BUCKET }}/css --recursive
+      - name: Upload bucket
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: buckets
+          default_author: github_actor
+          message: "chore(deps): update buckets"

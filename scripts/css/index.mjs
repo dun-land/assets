@@ -5,9 +5,9 @@ import { minify } from 'minify'
 import rcompare from 'semver/functions/rcompare.js'
 
 import npm from '../vendors/npm.mjs'
-import { parseYml, s3Dir } from '../utils.mjs'
+import { parseYml, buckets } from '../utils.mjs'
 
-const cssDir = join(s3Dir, 'css')
+const cssDir = join(buckets, '')
 const css = await parseYml('css')
 
 for (const [name, content] of Object.entries(css)) {
@@ -18,7 +18,7 @@ for (const [name, content] of Object.entries(css)) {
   // 버전 디렉토리를 가져옴
   const versions = await readdir(projectDir)
 
-  // S3에 저장된 최신 버전을 가염
+  // 저장된 최신 버전을 가져온다.
   const [currentVersion] = versions.sort((x, y) => rcompare(x, y, false))
 
   // 다운로드 및 파일 추출
