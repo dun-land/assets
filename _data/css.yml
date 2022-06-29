@@ -11,3 +11,8 @@ normalize:
   minified: true
   files:
     - '*.css'
+
+ponya:
+  npm: "@ponya-ui/normalize"
+  files:
+    - "*.css"
